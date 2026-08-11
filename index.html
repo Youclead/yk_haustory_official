@@ -12,18 +12,33 @@
             font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
+        
+        /* PC 환경 배경: PC로 볼 때는 양옆을 까맣게 채워서 모바일 화면만 돋보이게 합니다 */
         body {
-/* 기존의 단조로운 색상 배경 대신, 직접 만든 bg.jpg를 넣고 반투명 어두운 필터를 씌웁니다 */
+            background-color: #050505; 
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* PC에서 '아이폰 화면' 역할을 할 메인 뼈대 (모바일에서는 화면에 꽉 참) */
+        .mobile-container {
+            width: 100%;
+            max-width: 430px; /* 아이폰 프로 화면의 논리적 웹 픽셀 크기에 정확히 맞춤 */
+            min-height: 100vh;
+            position: relative;
+            
+            /* 💡 배경 사진과 필터를 body가 아니라 스마트폰 컨테이너 안으로 이동시켰습니다! */
             background-image: 
                 linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.95)), 
                 url('bg.jpg');
-            background-size: cover; /* 화면 비율에 맞게 꽉 채우기 */
-            background-position: center; /* 사진 중앙을 기준으로 맞추기 */
-            background-attachment: fixed; /* 스크롤을 내려도 배경은 고정되게 하기 */
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: scroll;
+            
             color: #fff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); /* PC에서 봤을 때 폰 화면 입체감 그림자 */
             overflow-x: hidden;
         }
         
@@ -31,12 +46,14 @@
         #intro-video-container {
             position: fixed;
             top: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
+            max-width: 430px; /* 영상도 아이폰 가로 크기(430px)를 절대 넘지 않도록 제한 */
             height: 100%;
             background-color: #000;
             z-index: 9999;
-            display: flex; /* 기본적으로 표시 (JS에서 제어) */
+            display: flex;
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease;
@@ -46,6 +63,7 @@
             height: 100%;
             object-fit: cover;
         }
+        
         /* 우측 하단 건너뛰기 버튼 */
         #skip-btn {
             position: absolute;
@@ -63,6 +81,7 @@
         #skip-btn:active {
             background: rgba(255, 255, 255, 0.4);
         }
+        
         /* 좌측 하단 소리 제어 버튼 */
         #mute-btn {
             position: absolute;
@@ -82,42 +101,6 @@
         }
         /* ---------------------------------- */
 
-        .mobile-container {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-            z-index: 1;
-        }
-        .mobile-container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.03) 10px, rgba(255, 255, 255, 0.03) 11px),
-                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
-                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
-            z-index: -1;
-        }
-        .mobile-container::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 25px 25px;
-            z-index: -1;
-        }
         .header {
             text-align: center;
             padding: 40px 0 30px;
@@ -251,7 +234,6 @@
 
 <!-- 🎬 인트로 동영상 영역 -->
 <div id="intro-video-container" style="display: none;">
-    <!-- 💡 JS에서 통제하기 위해 autoplay 속성을 제거했습니다 -->
     <video id="intro-video" src="1.mp4" muted playsinline></video>
     
     <button id="mute-btn">🔊 소리 켜기</button>
@@ -322,32 +304,24 @@
         const skipBtn = document.getElementById('skip-btn');
         const muteBtn = document.getElementById('mute-btn');
 
-        // 💡 1. 방문 기록 체크: 이미 인트로를 봤다면 영상 관련 코드를 실행하지 않고 바로 종료
         if (sessionStorage.getItem('introSeen') === 'true') {
             return; 
         }
 
-        // 인트로를 보지 않은 첫 방문자일 경우에만 비디오 컨테이너를 보이게 설정
         videoContainer.style.display = 'flex';
 
-        // 2. 영상을 가리고 메인 화면을 보여주는 함수 (동시에 봤다는 기록 저장)
         function hideVideo() {
             videoContainer.style.opacity = '0';
             setTimeout(() => {
                 videoContainer.style.display = 'none';
                 video.pause();
-                // 💡 인트로 시청 완료 기록을 세션 스토리지에 저장
                 sessionStorage.setItem('introSeen', 'true');
             }, 500);
         }
 
-        // 3. 영상이 끝까지 재생되었을 때
         video.addEventListener('ended', hideVideo);
-        
-        // 4. '건너뛰기' 버튼을 눌렀을 때
         skipBtn.addEventListener('click', hideVideo);
 
-        // 5. '소리 켜기/끄기' 제어
         muteBtn.addEventListener('click', function() {
             if (video.muted) {
                 video.muted = false;
@@ -358,11 +332,9 @@
             }
         });
 
-        // 6. JS를 통한 영상 자동 재생 시작 (autoplay 속성 대체)
         let playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(error => {
-                // 브라우저 정책 등으로 재생이 막히면 영상을 끄고 바로 메인으로 진입
                 hideVideo();
             });
         }
