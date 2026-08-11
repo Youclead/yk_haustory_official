@@ -13,7 +13,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* PC 환경 배경: PC로 볼 때는 양옆을 까맣게 채워서 모바일 화면만 돋보이게 합니다 */
+        /* PC 환경 배경: 양옆을 어둡게 채워 모바일 화면 돋보이게 처리 */
         body {
             background-color: #050505; 
             display: flex;
@@ -21,24 +21,27 @@
             min-height: 100vh;
         }
 
-        /* PC에서 '아이폰 화면' 역할을 할 메인 뼈대 (모바일에서는 화면에 꽉 참) */
+        /* 모바일 컨테이너 뼈대 */
         .mobile-container {
             width: 100%;
-            max-width: 430px; /* 아이폰 프로 화면의 논리적 웹 픽셀 크기에 정확히 맞춤 */
+            max-width: 430px;
             min-height: 100vh;
             position: relative;
+            display: flex;
+            flex-direction: column;
             
-            /* 💡 배경 사진과 필터를 body가 아니라 스마트폰 컨테이너 안으로 이동시켰습니다! */
+            /* 배경 이미지 및 어두운 필터 적용 (아파트가 잘 보이도록 투명도 조정) */
             background-image: 
-                linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.95)), 
+                linear-gradient(rgba(10, 17, 40, 0.65), rgba(10, 17, 40, 0.88)), 
                 url('bg.jpg');
             background-size: cover; 
-            background-position: center; 
+            /* 💡 아파트 건물들이 맨 위 타이틀 뒤쪽까지 올라오도록 위치를 25%로 조정했습니다 */
+            background-position: center 25%; 
             background-attachment: scroll;
             
             color: #fff;
             padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8); /* PC에서 봤을 때 폰 화면 입체감 그림자 */
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
             overflow-x: hidden;
         }
         
@@ -49,7 +52,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 430px; /* 영상도 아이폰 가로 크기(430px)를 절대 넘지 않도록 제한 */
+            max-width: 430px;
             height: 100%;
             background-color: #000;
             z-index: 9999;
