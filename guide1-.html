@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>카카오톡 오픈채팅방 입장 요청 안내</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: linear-gradient(135deg, #1d2b51, #0a1128);
+            color: #fff;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+        }
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        .back-btn {
+            display: inline-block;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #FEE500; /* 카카오톡 테마에 맞춰 노란색 포인트 */
+        }
+        .guide-box {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px 20px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
+        }
+        .step {
+            margin-bottom: 35px;
+        }
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        .step-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .step-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+            word-break: keep-all;
+        }
+        .guide-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .highlight {
+            color: #FEE500;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 뒤로가기 버튼 -->
+    <a href="index.html" class="back-btn">← 메인으로 돌아가기</a>
+
+    <h2>💬 단체방 입장 코드 요청 방법</h2>
+
+    <div class="guide-box">
+        
+        <!-- 1번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">1. 오픈채팅 검색 열기</div>
+            <div class="step-desc">카카오톡 하단 <strong>오픈채팅</strong> 탭을 누른 후, 우측 상단의 <strong>검색(돋보기) 버튼</strong>을 선택해 주세요.</div>
+            <img src="1-1.png" alt="오픈채팅 검색버튼 선택" class="guide-img">
+        </div>
+        
+        <!-- 2번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">2. 공식 오픈채팅방 검색</div>
+            <div class="step-desc">검색창에 <strong>'역곡지구 하우스토리'</strong>를 검색하여 목록에서 <strong>[공식]역곡지구 하우스토리</strong> 방을 선택해 주세요.</div>
+            <img src="1-2.png" alt="공식방 검색 및 선택" class="guide-img">
+        </div>
+
+        <!-- 3번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">3. 방장 프로필 선택</div>
+            <div class="step-desc">방 정보 화면 하단에 있는 방장 프로필 <strong>'언제나가자/209동'</strong>을 눌러주세요.</div>
+            <img src="1-3.png" alt="방장 프로필 선택" class="guide-img">
+        </div>
+
+        <!-- 4번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">4. 1:1 오픈채팅으로 입장 요청</div>
+            <div class="step-desc"><strong>1:1 오픈채팅</strong> 버튼을 눌러 당첨자 인증 화면을 보내주시면, 확인 후 단체방 입장 코드를 안내해 드립니다.</div>
+            <img src="1-4.png" alt="1:1 오픈채팅 요청" class="guide-img">
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
