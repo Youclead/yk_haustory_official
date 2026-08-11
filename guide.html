@@ -45,6 +45,32 @@
             z-index: 999;
         }
 
+        /* 🚨 추가된 상단 안내 박스 스타일 */
+        .alert-box {
+            background: rgba(255, 71, 87, 0.15); /* 은은한 붉은색 배경 */
+            border: 2px solid rgba(255, 71, 87, 0.5);
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 35px;
+            text-align: center;
+            word-break: keep-all;
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.2);
+        }
+        .alert-box .highlight-text {
+            display: block;
+            font-size: 21px; /* 큰 글씨 */
+            font-weight: 800;
+            color: #ff6b81; /* 눈에 띄는 색상 */
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .alert-box .sub-text {
+            display: block;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
         h2 {
             font-size: 22px;
             margin-bottom: 20px;
@@ -94,6 +120,12 @@
 <div class="container">
     <!-- 스크롤 시 고정되는 뒤로가기 버튼 -->
     <a href="index.html" class="back-btn">← 메인으로 돌아가기</a>
+
+    <!-- 🚨 새로 추가된 상단 안내 문구 박스 -->
+    <div class="alert-box">
+        <span class="highlight-text">현재 동호수 배정받은 당첨자만<br>입장받고 있습니다.</span>
+        <span class="sub-text">예비 당첨자 분들은 추후 동호수 배정 후에<br>가입 부탁 드립니다.</span>
+    </div>
 
     <h2>📱 당첨내역 캡쳐 방법 안내</h2>
 
