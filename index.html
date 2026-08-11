@@ -13,7 +13,13 @@
             -webkit-tap-highlight-color: transparent;
         }
         body {
-            background: linear-gradient(135deg, #1d2b51, #0a1128);
+/* 기존의 단조로운 색상 배경 대신, 직접 만든 bg.jpg를 넣고 반투명 어두운 필터를 씌웁니다 */
+            background-image: 
+                linear-gradient(rgba(10, 17, 40, 0.75), rgba(10, 17, 40, 0.95)), 
+                url('bg.jpg');
+            background-size: cover; /* 화면 비율에 맞게 꽉 채우기 */
+            background-position: center; /* 사진 중앙을 기준으로 맞추기 */
+            background-attachment: fixed; /* 스크롤을 내려도 배경은 고정되게 하기 */
             color: #fff;
             min-height: 100vh;
             display: flex;
