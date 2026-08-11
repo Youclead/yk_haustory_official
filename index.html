@@ -40,6 +40,7 @@
             height: 100%;
             object-fit: cover;
         }
+        /* 우측 하단 건너뛰기 버튼 */
         #skip-btn {
             position: absolute;
             bottom: env(safe-area-inset-bottom, 30px);
@@ -54,6 +55,23 @@
             margin-bottom: 20px;
         }
         #skip-btn:active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        /* 좌측 하단 소리 제어 버튼 */
+        #mute-btn {
+            position: absolute;
+            bottom: env(safe-area-inset-bottom, 30px);
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            margin-bottom: 20px;
+        }
+        #mute-btn:active {
             background: rgba(255, 255, 255, 0.4);
         }
         /* ---------------------------------- */
@@ -227,7 +245,11 @@
 
 <!-- 🎬 인트로 동영상 영역 -->
 <div id="intro-video-container">
+    <!-- 영상은 기본적으로 음소거(muted) 상태로 자동 재생됩니다 -->
     <video id="intro-video" src="1.mp4" autoplay muted playsinline></video>
+    
+    <!-- 💡 새롭게 추가된 소리 제어 버튼 -->
+    <button id="mute-btn">🔊 소리 켜기</button>
     <button id="skip-btn">건너뛰기 ➔</button>
 </div>
 
@@ -275,7 +297,7 @@
             [공식] 카카오톡 단체방 참여하기
         </a>
 
-        <!-- 💡 카카오톡 단체방 하단 안내 링크 추가 -->
+        <!-- 카카오톡 단체방 하단 안내 링크 -->
         <div class="btn-sub-texts">
             <a href="guide1-.html" class="guide-link">* 단체방 참여 요청 방법</a>
         </div>
@@ -287,23 +309,44 @@
     </div>
 </div>
 
-<!-- ⚙️ 자바스크립트: 영상 재생 완료 및 건너뛰기 버튼 제어 -->
+<!-- ⚙️ 자바스크립트: 영상 재생, 소리 켜기/끄기 및 건너뛰기 제어 -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const videoContainer = document.getElementById('intro-video-container');
         const video = document.getElementById('intro-video');
         const skipBtn = document.getElementById('skip-btn');
+        const muteBtn = document.getElementById('mute-btn'); // 소리 버튼 불러오기
 
+        // 1. 영상을 가리고 메인 화면을 보여주는 함수
         function hideVideo() {
             videoContainer.style.opacity = '0';
             setTimeout(() => {
                 videoContainer.style.display = 'none';
+                // 메인 화면으로 넘어갈 때 영상이 계속 재생되는 것을 막기 위해 정지
+                video.pause(); 
             }, 500);
         }
 
+        // 2. 영상이 끝까지 재생되었을 때
         video.addEventListener('ended', hideVideo);
+        
+        // 3. '건너뛰기' 버튼을 눌렀을 때
         skipBtn.addEventListener('click', hideVideo);
 
+        // 4. '소리 켜기/끄기' 버튼을 눌렀을 때 작동하는 기능
+        muteBtn.addEventListener('click', function() {
+            if (video.muted) {
+                // 현재 음소거 상태라면 소리를 켭니다.
+                video.muted = false;
+                muteBtn.innerHTML = '🔇 소리 끄기';
+            } else {
+                // 현재 소리가 켜져 있다면 다시 음소거합니다.
+                video.muted = true;
+                muteBtn.innerHTML = '🔊 소리 켜기';
+            }
+        });
+
+        // 5. 영상 자동 재생 시작 (에러 발생 시 바로 메인 화면 띄움)
         let playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(error => {
