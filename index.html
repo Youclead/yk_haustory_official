@@ -30,7 +30,7 @@
             height: 100%;
             background-color: #000;
             z-index: 9999;
-            display: flex;
+            display: flex; /* 기본적으로 표시 (JS에서 제어) */
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease;
@@ -244,11 +244,10 @@
 <body>
 
 <!-- 🎬 인트로 동영상 영역 -->
-<div id="intro-video-container">
-    <!-- 영상은 기본적으로 음소거(muted) 상태로 자동 재생됩니다 -->
-    <video id="intro-video" src="1.mp4" autoplay muted playsinline></video>
+<div id="intro-video-container" style="display: none;">
+    <!-- 💡 JS에서 통제하기 위해 autoplay 속성을 제거했습니다 -->
+    <video id="intro-video" src="1.mp4" muted playsinline></video>
     
-    <!-- 💡 새롭게 추가된 소리 제어 버튼 -->
     <button id="mute-btn">🔊 소리 켜기</button>
     <button id="skip-btn">건너뛰기 ➔</button>
 </div>
@@ -288,7 +287,7 @@
         </div>
         
         <!-- 인스타그램 -->
-        <a href="https://www.instagram.com/yk_haustory_official" class="btn btn-insta">
+        <a href="https://www.instagram.com/yk_haustory_official?igsh=aXFva3JwaW5wdjNx" class="btn btn-insta">
             인스타그램 공식 계정 방문하기
         </a>
 
@@ -309,47 +308,55 @@
     </div>
 </div>
 
-<!-- ⚙️ 자바스크립트: 영상 재생, 소리 켜기/끄기 및 건너뛰기 제어 -->
+<!-- ⚙️ 자바스크립트: 영상 재생, 소리 제어 및 1회 재생 기억 기능 -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const videoContainer = document.getElementById('intro-video-container');
         const video = document.getElementById('intro-video');
         const skipBtn = document.getElementById('skip-btn');
-        const muteBtn = document.getElementById('mute-btn'); // 소리 버튼 불러오기
+        const muteBtn = document.getElementById('mute-btn');
 
-        // 1. 영상을 가리고 메인 화면을 보여주는 함수
+        // 💡 1. 방문 기록 체크: 이미 인트로를 봤다면 영상 관련 코드를 실행하지 않고 바로 종료
+        if (sessionStorage.getItem('introSeen') === 'true') {
+            return; 
+        }
+
+        // 인트로를 보지 않은 첫 방문자일 경우에만 비디오 컨테이너를 보이게 설정
+        videoContainer.style.display = 'flex';
+
+        // 2. 영상을 가리고 메인 화면을 보여주는 함수 (동시에 봤다는 기록 저장)
         function hideVideo() {
             videoContainer.style.opacity = '0';
             setTimeout(() => {
                 videoContainer.style.display = 'none';
-                // 메인 화면으로 넘어갈 때 영상이 계속 재생되는 것을 막기 위해 정지
-                video.pause(); 
+                video.pause();
+                // 💡 인트로 시청 완료 기록을 세션 스토리지에 저장
+                sessionStorage.setItem('introSeen', 'true');
             }, 500);
         }
 
-        // 2. 영상이 끝까지 재생되었을 때
+        // 3. 영상이 끝까지 재생되었을 때
         video.addEventListener('ended', hideVideo);
         
-        // 3. '건너뛰기' 버튼을 눌렀을 때
+        // 4. '건너뛰기' 버튼을 눌렀을 때
         skipBtn.addEventListener('click', hideVideo);
 
-        // 4. '소리 켜기/끄기' 버튼을 눌렀을 때 작동하는 기능
+        // 5. '소리 켜기/끄기' 제어
         muteBtn.addEventListener('click', function() {
             if (video.muted) {
-                // 현재 음소거 상태라면 소리를 켭니다.
                 video.muted = false;
                 muteBtn.innerHTML = '🔇 소리 끄기';
             } else {
-                // 현재 소리가 켜져 있다면 다시 음소거합니다.
                 video.muted = true;
                 muteBtn.innerHTML = '🔊 소리 켜기';
             }
         });
 
-        // 5. 영상 자동 재생 시작 (에러 발생 시 바로 메인 화면 띄움)
+        // 6. JS를 통한 영상 자동 재생 시작 (autoplay 속성 대체)
         let playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(error => {
+                // 브라우저 정책 등으로 재생이 막히면 영상을 끄고 바로 메인으로 진입
                 hideVideo();
             });
         }
