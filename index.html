@@ -6,24 +6,58 @@
     <title>역곡지구 하우스토리 입주예정자 모임</title>
     <style>
         :root {
-            --brand-naver: #03c75a;
+            --brand-naver-start: #04d15f;
+            --brand-naver-end: #03b753;
             --brand-kakao: #FEE500;
             --brand-insta: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
+
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background-color: #050505; 
+            background-color: #030406; 
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            color: #ffffff;
+        }
+
+        /* 🌌 애니메이션 오로라 배경 요소 */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .ambient-bg::before, .ambient-bg::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .ambient-bg::before {
+            background: #2a3a5a;
+            top: -10%; left: -20%;
+        }
+        .ambient-bg::after {
+            background: #1a2a20;
+            bottom: -10%; right: -20%;
+            animation-delay: -5s;
         }
 
         .mobile-container {
@@ -31,246 +65,207 @@
             max-width: 430px;
             min-height: 100vh;
             position: relative;
+            z-index: 1;
             display: flex;
             flex-direction: column;
             
             background-image: 
-                linear-gradient(rgba(10, 17, 30, 0.7), rgba(10, 17, 30, 0.92)), 
+                linear-gradient(rgba(3, 4, 6, 0.7), rgba(3, 4, 6, 0.95)), 
                 url('bg.jpg');
             background-size: cover; 
-            background-position: center 25%; 
-            background-attachment: scroll;
+            background-position: center; 
+            background-attachment: fixed;
             
-            color: #ffffff;
             padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom) 24px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
-            overflow-x: hidden;
         }
         
-        /* --- 🎬 인트로 동영상 영역 스타일 --- */
+        /* --- 🎬 인트로 동영상 --- */
         #intro-video-container {
             position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 430px;
-            height: 100%;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 430px; height: 100%;
             background-color: #000;
             z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        #intro-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        #intro-video { width: 100%; height: 100%; object-fit: cover; }
         
         .video-control-btn {
-            position: absolute;
-            bottom: env(safe-area-inset-bottom, 30px);
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            margin-bottom: 20px;
-            transition: background 0.2s;
+            position: absolute; bottom: env(safe-area-inset-bottom, 30px);
+            background: rgba(20, 20, 20, 0.5); color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px; border-radius: 30px;
+            font-size: 14px; font-weight: 600;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            margin-bottom: 20px; transition: all 0.2s;
         }
-        .video-control-btn:active {
-            background: rgba(255, 255, 255, 0.3);
-        }
+        .video-control-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
         #mute-btn { left: 24px; }
         #skip-btn { right: 24px; }
-        /* ---------------------------------- */
 
-        /* 헤더 영역 */
+        /* --- ✨ 공통 등장 애니메이션 --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.25s; }
+        .delay-3 { animation-delay: 0.4s; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        /* --- 헤더 영역 --- */
         .header {
             text-align: center;
-            padding: 50px 0 36px;
+            padding: 50px 0 40px;
         }
         .badge {
-            display: inline-block;
-            background-color: rgba(255, 255, 255, 0.12);
-            color: #eaeaea;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 6px 16px;
-            border-radius: 24px;
-            margin-bottom: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(4px);
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            color: #fff; font-size: 12.5px; font-weight: 700;
+            padding: 8px 18px; border-radius: 30px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .badge::before {
+            content: ''; display: block; width: 6px; height: 6px;
+            background-color: #03c75a; border-radius: 50%;
+            box-shadow: 0 0 8px #03c75a;
         }
         .title {
-            font-size: 28px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 14px;
-            letter-spacing: -0.8px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-size: 32px; font-weight: 800;
+            margin-bottom: 16px; letter-spacing: -1px;
+            background: linear-gradient(to right, #ffffff, #d8d8d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
         .subtitle {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.5;
-            font-weight: 500;
-            word-break: keep-all;
+            font-size: 16px; color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6; font-weight: 400; word-break: keep-all;
         }
-        .subtitle .highlight {
-            color: #FFD700; /* 금색 포인트 */
-            font-weight: 700;
-        }
+        .subtitle .highlight { color: #FEE500; font-weight: 600; }
 
-        /* 글래스모피즘 본문 박스 */
+        /* --- 카드형 컨텐츠 박스 (글래스모피즘) --- */
         .content-box {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            background: var(--glass-bg);
+            border-radius: 24px;
             padding: 28px 24px;
-            margin-bottom: 36px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
         }
         .content-box h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .content-box ul {
-            list-style: none;
-        }
-        
-        /* 새로운 리스트 스타일 적용 */
-        .content-box li {
-            margin-bottom: 20px;
-            position: relative;
-            padding-left: 26px;
-            word-break: keep-all;
-        }
-        .content-box li:last-child {
-            margin-bottom: 0;
-        }
-        .content-box li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            top: 2px;
-            color: var(--brand-naver); /* 네이버 그린 포인트 */
-            font-weight: 900;
-            font-size: 16px;
-        }
-        .li-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-        .li-desc {
-            font-size: 13.5px;
-            color: rgba(255, 255, 255, 0.75);
-            line-height: 1.5;
-            letter-spacing: -0.3px;
+            font-size: 16px; font-weight: 700; color: #fff;
+            margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+            opacity: 0.9;
         }
 
-        /* 버튼 그룹 영역 */
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 40px;
+        /* 카드형 리스트 아이템 */
+        .feature-list { display: flex; flex-direction: column; gap: 14px; }
+        .feature-item {
+            display: flex; gap: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 18px; border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: transform 0.2s, background 0.2s;
         }
+        .feature-item:active {
+            transform: scale(0.98); background: rgba(255, 255, 255, 0.08);
+        }
+        .feature-icon-wrapper {
+            flex-shrink: 0; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1); border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 18px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .feature-text .li-title {
+            font-size: 15.5px; font-weight: 700; color: #fff;
+            margin-bottom: 6px; letter-spacing: -0.3px;
+        }
+        .feature-text .li-desc {
+            font-size: 13.5px; color: rgba(255, 255, 255, 0.65);
+            line-height: 1.5; letter-spacing: -0.3px; word-break: keep-all;
+        }
+
+        /* --- 버튼 그룹 영역 --- */
+        .btn-group { display: flex; flex-direction: column; gap: 14px; padding-bottom: 40px; }
         
         .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 60px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 60px; border-radius: 18px;
+            font-size: 16px; font-weight: 700; text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        .btn:active {
-            transform: scale(0.97);
+        .btn:active { transform: scale(0.96); }
+        
+        /* 버튼 공통 빛반사 효과 (Shine) */
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg); transition: 0.5s;
         }
+        .btn:active::after { left: 150%; transition: 0.4s; }
         
         .btn-naver {
-            background-color: var(--brand-naver);
+            background: linear-gradient(135deg, var(--brand-naver-start), var(--brand-naver-end));
             color: #ffffff;
-            box-shadow: 0 6px 20px rgba(3, 199, 90, 0.25);
+            box-shadow: 0 8px 24px rgba(3, 199, 90, 0.25), inset 0 1px 1px rgba(255,255,255,0.3);
         }
         .btn-kakao-main {
-            background-color: var(--brand-kakao);
-            color: #191919;
-            box-shadow: 0 6px 20px rgba(254, 229, 0, 0.25);
+            background: var(--brand-kakao); color: #191919;
+            box-shadow: 0 8px 24px rgba(254, 229, 0, 0.15), inset 0 1px 1px rgba(255,255,255,0.4);
         }
         .btn-kakao-sub {
-            background-color: rgba(25, 25, 25, 0.5);
-            color: var(--brand-kakao);
-            border: 1px solid rgba(254, 229, 0, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(25, 25, 25, 0.6); color: var(--brand-kakao);
+            border: 1px solid rgba(254, 229, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
         .btn-insta {
-            background: var(--brand-insta);
-            color: #ffffff;
-            box-shadow: 0 6px 20px rgba(220, 39, 67, 0.25);
+            background: var(--brand-insta); color: #ffffff;
+            box-shadow: 0 8px 24px rgba(220, 39, 67, 0.2), inset 0 1px 1px rgba(255,255,255,0.3);
         }
 
-        /* 하단 안내 텍스트 스타일 개선 */
+        /* 하단 안내 텍스트 */
         .btn-sub-texts {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-            margin-top: -6px;
-            margin-bottom: 10px;
-            padding-right: 4px;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+            margin: -4px 4px 10px 0;
         }
         .btn-notice {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            word-break: keep-all;
-            text-align: right;
+            font-size: 13px; color: rgba(255, 255, 255, 0.6); word-break: keep-all; text-align: right;
         }
         .guide-link {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-            padding-bottom: 2px;
-            transition: opacity 0.2s;
+            font-size: 13px; color: rgba(255, 255, 255, 0.85); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 8px; background: rgba(255,255,255,0.08); border-radius: 8px;
+            transition: background 0.2s;
         }
-        .guide-link:active {
-            opacity: 0.5;
-        }
-        .notice-highlight {
-            color: #ff5555;
-            font-weight: 600;
-        }
+        .guide-link:active { background: rgba(255,255,255,0.15); }
+        .notice-highlight { color: #ff5e5e; font-weight: 600; }
+
     </style>
 </head>
 <body>
 
+<!-- 🌌 오로라 배경 (이미지 로딩 전/후 은은한 효과 제공) -->
+<div class="ambient-bg"></div>
+
 <!-- 🎬 인트로 동영상 영역 -->
 <div id="intro-video-container" style="display: none;">
     <video id="intro-video" src="1.mp4" muted playsinline></video>
-    
     <button id="mute-btn" class="video-control-btn">🔊 소리 켜기</button>
     <button id="skip-btn" class="video-control-btn">건너뛰기 ➔</button>
 </div>
@@ -278,8 +273,8 @@
 <!-- 메인 페이지 영역 -->
 <div class="mobile-container">
     <!-- 헤더 영역 -->
-    <div class="header">
-        <span class="badge">입주예정자 공식 소통 창구</span>
+    <div class="header fade-up delay-1">
+        <div class="badge">입주예정자 공식 소통 창구</div>
         <h1 class="title">역곡지구 하우스토리</h1>
         <p class="subtitle">
             명품 단지의 완성,<br>
@@ -287,35 +282,46 @@
         </p>
     </div>
 
-    <!-- 안내 본문 (장점 3가지로 개편) -->
-    <div class="content-box">
+    <!-- 카드형 안내 본문 -->
+    <div class="content-box fade-up delay-2">
         <h3>📢 입주예정자협회와 함께해야 하는 이유</h3>
-        <ul>
-            <li>
-                <div class="li-title">단지 가치 제고 & 품질 강화</div>
-                <div class="li-desc">건설 현장 모니터링 및 자재·외관 특화 요구로 우리 아파트의 가치를 극대화합니다.</div>
-            </li>
-            <li>
-                <div class="li-title">철저한 하자 방지 & 사전 점검</div>
-                <div class="li-desc">사전점검 단체 대응 및 전문적인 시공 감독으로 입주 전 하자를 최소화합니다.</div>
-            </li>
-            <li>
-                <div class="li-title">소통 창구 일원화 & 권익 보호</div>
-                <div class="li-desc">시행·시공사(남광토건) 및 부천시를 상대하는 당당한 공식 대표체로서 입주민의 요구사항을 관철합니다.</div>
-            </li>
-        </ul>
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">📈</div>
+                <div class="feature-text">
+                    <div class="li-title">단지 가치 제고 & 품질 강화</div>
+                    <div class="li-desc">건설 현장 모니터링 및 자재·외관 특화 요구로 우리 아파트의 가치를 극대화합니다.</div>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">🔍</div>
+                <div class="feature-text">
+                    <div class="li-title">철저한 하자 방지 & 사전 점검</div>
+                    <div class="li-desc">사전점검 단체 대응 및 전문적인 시공 감독으로 입주 전 하자를 최소화합니다.</div>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon-wrapper">🤝</div>
+                <div class="feature-text">
+                    <div class="li-title">소통 창구 일원화 & 권익 보호</div>
+                    <div class="li-desc">시행·시공사 및 부천시를 상대하는 당당한 공식 대표체로서 입주민의 요구사항을 관철합니다.</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 대형 버튼 영역 -->
-    <div class="btn-group">
+    <!-- 버튼 그룹 영역 -->
+    <div class="btn-group fade-up delay-3">
         <!-- 네이버 카페 -->
         <a href="https://cafe.naver.com/yeokgoka2" class="btn btn-naver">
             네이버 공식 카페 가입하기
         </a>
         
         <div class="btn-sub-texts">
-            <div class="btn-notice">※ 외부인 참여를 제한하기 위해 카페 가입시 <span class="notice-highlight">인증</span>이 필요합니다.</div>
-            <a href="guide.html" class="guide-link">* 카페가입을 위한 인증화면 캡쳐방법 안내</a>
+            <div class="btn-notice">※ 외부인 제한을 위해 카페 가입시 <span class="notice-highlight">인증</span>이 필요합니다.</div>
+            <a href="guide.html" class="guide-link">👉 인증화면 캡쳐방법 안내</a>
         </div>
         
         <!-- 인스타그램 -->
@@ -329,7 +335,7 @@
         </a>
 
         <div class="btn-sub-texts">
-            <a href="guide1-.html" class="guide-link">* 단체방 참여 요청 방법</a>
+            <a href="guide1-.html" class="guide-link">👉 단체방 참여 요청 방법</a>
         </div>
 
         <!-- 카카오톡 수다방 -->
@@ -347,6 +353,7 @@
         const skipBtn = document.getElementById('skip-btn');
         const muteBtn = document.getElementById('mute-btn');
 
+        // 세션 체크
         if (sessionStorage.getItem('introSeen') === 'true') {
             return; 
         }
@@ -359,7 +366,7 @@
                 videoContainer.style.display = 'none';
                 video.pause();
                 sessionStorage.setItem('introSeen', 'true');
-            }, 500);
+            }, 600); // fade transition 시간에 맞춰 수정
         }
 
         video.addEventListener('ended', hideVideo);
@@ -375,9 +382,11 @@
             }
         });
 
+        // 비디오 자동 재생 시도
         let playPromise = video.play();
         if (playPromise !== undefined) {
             playPromise.catch(error => {
+                // 자동 재생이 브라우저 정책에 의해 막히면 비디오 창 바로 숨김
                 hideVideo();
             });
         }
