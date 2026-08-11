@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>인증화면 캡쳐 방법 안내</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1d2b51, #0a1128);
+            color: #fff;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+        }
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        .back-btn {
+            display: inline-block;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #FEE500;
+        }
+        .guide-box {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px 20px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
+        }
+        .step {
+            margin-bottom: 35px;
+        }
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        .step-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .step-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+            word-break: keep-all;
+        }
+        .guide-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .highlight {
+            color: #ff4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 뒤로가기 버튼 -->
+    <a href="index.html" class="back-btn">← 메인으로 돌아가기</a>
+
+    <h2>📱 당첨내역 캡쳐 방법 안내</h2>
+
+    <div class="guide-box">
+        
+        <!-- 1번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">1. 하단 '청약' 메뉴 클릭</div>
+            <div class="step-desc">LH 청약플러스 앱(또는 모바일웹) 메인 화면 하단에 있는 <strong>'청약'</strong> 버튼을 눌러주세요.</div>
+            <img src="1.png" alt="하단 청약 메뉴" class="guide-img">
+        </div>
+        
+        <!-- 2번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">2. 우측 상단 '전체 메뉴' 클릭</div>
+            <div class="step-desc">청약 화면으로 이동한 후, 우측 상단의 <strong>전체 메뉴(가로줄 3개 아이콘)</strong>를 선택합니다.</div>
+            <img src="2.png" alt="우측 상단 전체 메뉴" class="guide-img">
+        </div>
+
+        <!-- 3번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">3. '청약결과 확인' 메뉴 선택</div>
+            <div class="step-desc">왼쪽 탭 메뉴를 아래로 내려 <strong>'청약결과 확인'</strong>을 눌러주세요.</div>
+            <img src="3.png" alt="청약결과 확인 탭" class="guide-img">
+        </div>
+
+        <!-- 4번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">4. '당첨/낙찰 결과조회' 선택</div>
+            <div class="step-desc">오른쪽에 나타나는 세부 메뉴 중 <strong>'당첨/낙찰 결과조회'</strong>를 선택합니다.</div>
+            <img src="4.png" alt="당첨/낙찰 결과조회" class="guide-img">
+        </div>
+
+        <!-- 5번 이미지 영역 -->
+        <div class="step">
+            <div class="step-title">5. 최종 당첨내역 캡쳐</div>
+            <div class="step-desc">주민번호 입력 후 조회하여 <strong>신청자명, 단지명(부천역곡[A2]), 동호수</strong>가 명확히 보이도록 화면을 캡쳐해 주세요.<br>
+            <span class="highlight"></span></div>
+            <img src="5.png" alt="최종 당첨 화면 캡쳐" class="guide-img">
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
