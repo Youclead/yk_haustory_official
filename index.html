@@ -89,11 +89,21 @@
             display: flex; justify-content: center; align-items: center;
             transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        /* 변경된 부분: 가로 폭에 맞추고 16:9 비율(height: auto, aspect-ratio)로 짤림 없이 출력 */
+
+        /* 16:9 비율을 유지하는 래퍼 컨테이너 */
+        .video-wrapper {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+
+        /* 가로 폭에 맞추고 짤림 없이 출력 */
         #intro-video {
             width: 100%;
-            height: auto;
-            aspect-ratio: 16 / 9;
+            height: 100%;
             object-fit: contain;
         }
         
@@ -271,7 +281,9 @@
 
 <!-- 🎬 인트로 동영상 영역 -->
 <div id="intro-video-container">
-    <video id="intro-video" src="1.mp4" muted playsinline preload="auto"></video>
+    <div class="video-wrapper">
+        <video id="intro-video" src="1.mp4" muted playsinline preload="auto"></video>
+    </div>
     <button id="mute-btn" class="video-control-btn">🔊 소리 켜기</button>
     <button id="skip-btn" class="video-control-btn">건너뛰기 ➔</button>
 </div>
