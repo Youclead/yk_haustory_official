@@ -89,7 +89,7 @@
             display: flex; justify-content: center; align-items: center;
             transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        #intro-video { width: 100%; height: 100%; object-fit: cover; }
+        #intro-video { width: 100%; height: 100%; object-fit: contain; }
         
         .video-control-btn {
             position: absolute; bottom: env(safe-area-inset-bottom, 30px);
@@ -379,9 +379,19 @@
 
         muteBtn.addEventListener('click', function() {
             if (video.muted) {
+                // 음소거 해제
                 video.muted = false;
                 muteBtn.innerHTML = '🔇 소리 끄기';
+                
+                // 브라우저가 영상을 멈추는 것을 방지하기 위해 명시적으로 다시 재생 명령
+                let playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("사운드 켜기 후 재생 에러:", error);
+                    });
+                }
             } else {
+                // 음소거
                 video.muted = true;
                 muteBtn.innerHTML = '🔊 소리 켜기';
             }
