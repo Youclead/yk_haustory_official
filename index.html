@@ -24,7 +24,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* 전체 화면 배경 (PC화면에서도 꽉 차도록 body에 적용) */
+        /* 전체 화면 배경 */
         body {
             background-color: #030406; 
             background-image: 
@@ -43,6 +43,8 @@
         body.no-scroll {
             overflow: hidden;
             touch-action: none;
+            position: fixed; /* iOS 사파리 바운스 스크롤 완벽 차단 */
+            width: 100%;
         }
 
         /* 🌌 애니메이션 오로라 배경 요소 */
@@ -73,14 +75,17 @@
             animation-delay: -5s;
         }
 
-        /* 기기별 유동적 크기를 가지는 메인 컨테이너 */
+        /* 메인 컨테이너 - 초기에는 숨김 처리 (버그 원천 차단) */
+        #main-ui {
+            display: none; /* 자바스크립트로 영상 종료 후 flex로 변경 */
+        }
+
         .main-container {
             width: 100%;
-            max-width: 1000px; /* PC/태블릿 최대 폭 제한 */
+            max-width: 1000px; 
             min-height: 100vh;
             position: relative;
             z-index: 1;
-            display: flex;
             flex-direction: column;
             padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom) 24px;
         }
@@ -88,9 +93,8 @@
         /* --- 🎬 인트로 동영상 --- */
         #intro-video-container {
             position: fixed;
-            top: 0; left: 0;
+            top: 0; left: 0; right: 0; bottom: 0; /* 상하좌우 빈틈없이 고정 */
             width: 100%; height: 100%;
-            height: 100dvh; /* 모바일 동적 뷰포트 지원 (주소창 튀는 현상 방지) */
             background-color: #000;
             z-index: 99999;
             display: flex; justify-content: center; align-items: center;
@@ -105,7 +109,6 @@
             align-items: center;
         }
 
-        /* 가로 폭/세로 폭 비율에 맞춰 자동 레터박스 처리되며 꽉 차게 출력 */
         #intro-video {
             width: 100%;
             height: 100%;
@@ -125,14 +128,13 @@
         #mute-btn { left: 24px; }
         #skip-btn { right: 24px; }
 
-        /* --- ✨ 수정된 애니메이션 로직 (동영상 재생중엔 완벽히 투명화) --- */
+        /* --- ✨ 애니메이션 로직 --- */
         .fade-up {
-            opacity: 0; /* 기본 상태: 버튼 및 컨텐츠 아예 안보임 */
+            opacity: 0; 
             transform: translateY(20px);
-            pointer-events: none; /* 클릭 방지 */
+            pointer-events: none; 
         }
         
-        /* 자바스크립트로 .start-animation 클래스가 추가되면 그때 나타남 */
         .start-animation .fade-up {
             animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             pointer-events: auto;
@@ -200,7 +202,6 @@
             opacity: 0.9;
         }
 
-        /* 카드형 리스트 아이템 */
         .feature-list { display: flex; flex-direction: column; gap: 14px; }
         .feature-item {
             display: flex; gap: 14px;
@@ -272,7 +273,6 @@
             box-shadow: 0 8px 24px rgba(220, 39, 67, 0.2), inset 0 1px 1px rgba(255,255,255,0.3);
         }
 
-        /* 하단 안내 텍스트 */
         .btn-sub-texts {
             display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
             margin-right: 4px;
@@ -281,7 +281,6 @@
             font-size: 13px; color: rgba(255, 255, 255, 0.6); word-break: keep-all; text-align: right;
         }
         
-        /* 가이드 링크 스타일 */
         .guide-link {
             font-size: 13px; 
             color: #74b9ff; 
@@ -301,7 +300,7 @@
         
         .notice-highlight { color: #ff5e5e; font-weight: 600; }
 
-        /* 💻 반응형 디자인: 태블릿 & PC 화면 최적화 */
+        /* 💻 반응형 디자인 */
         @media (min-width: 768px) {
             .header { padding: 80px 0 60px; }
             .title { font-size: 42px; }
@@ -340,7 +339,7 @@
     <button id="skip-btn" class="video-control-btn">건너뛰기 ➔</button>
 </div>
 
-<!-- 메인 페이지 영역 (id="main-ui" 부여됨) -->
+<!-- 메인 페이지 영역 (동영상 재생 중에는 display:none 상태) -->
 <div class="main-container" id="main-ui">
     <!-- 헤더 영역 -->
     <div class="header fade-up delay-1">
@@ -437,25 +436,31 @@
         // 세션 체크 (이미 영상을 본 유저 처리)
         if (sessionStorage.getItem('introSeen') === 'true') {
             videoContainer.style.display = 'none';
-            mainUI.classList.add('start-animation'); // 대기 없이 바로 UI 등장
+            mainUI.style.display = 'flex'; // 메인 UI 출력
+            mainUI.classList.add('start-animation'); // 애니메이션 즉시 실행
             return; 
         }
 
-        // 🔒 동영상이 보일 때 스크롤 완벽 차단
+        // 🔒 동영상이 보일 때 사파리 바운스 스크롤 완벽 차단
         document.body.classList.add('no-scroll');
 
         // 동영상 종료 및 건너뛰기 처리 함수
         function hideVideo() {
-            // 🔓 동영상이 사라질 때 스크롤 해제 및 최상단 이동
+            // 🔓 스크롤 락 해제
             document.body.classList.remove('no-scroll');
             window.scrollTo(0, 0);
 
-            // 동영상이 사라지기 시작함
+            // ✨ 숨겨놨던 메인 UI를 브라우저에 렌더링 (버그 원천 해결 구간)
+            mainUI.style.display = 'flex';
+            
+            // 약간의 지연(Frame)을 주어 display:flex 변경이 브라우저에 적용된 후 애니메이션이 부드럽게 타도록 처리
+            requestAnimationFrame(() => {
+                mainUI.classList.add('start-animation');
+            });
+
+            // 동영상 서서히 사라짐
             videoContainer.style.opacity = '0';
             
-            // ✨ 동영상이 끝나는 시점에 메인 UI의 애니메이션을 시작 (버튼 보임 현상 완벽 해결)
-            mainUI.classList.add('start-animation');
-
             setTimeout(() => {
                 videoContainer.style.display = 'none';
                 video.pause();
