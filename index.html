@@ -268,13 +268,25 @@
         .btn-notice {
             font-size: 13px; color: rgba(255, 255, 255, 0.6); word-break: keep-all; text-align: right;
         }
+        
+        /* ✨ 수정된 가이드 링크 스타일: 명확한 링크 느낌 부여 */
         .guide-link {
-            font-size: 13px; color: rgba(255, 255, 255, 0.85); text-decoration: none;
+            font-size: 13px; 
+            color: #74b9ff; /* 다크 테마에서 눈에 잘 띄는 파스텔 파란색 */
+            text-decoration: underline; /* 밑줄 추가 */
+            text-underline-offset: 3px; /* 밑줄 간격 살짝 띄우기 */
             display: inline-flex; align-items: center; gap: 4px;
-            padding: 4px 8px; background: rgba(255,255,255,0.08); border-radius: 8px;
-            transition: background 0.2s;
+            padding: 6px 12px; 
+            background: rgba(116, 185, 255, 0.1); /* 은은한 파란색 배경 */
+            border: 1px solid rgba(116, 185, 255, 0.25); /* 얇은 테두리 추가 */
+            border-radius: 8px;
+            transition: all 0.2s;
         }
-        .guide-link:active { background: rgba(255,255,255,0.15); }
+        .guide-link:active { 
+            background: rgba(116, 185, 255, 0.2); 
+            transform: scale(0.96); /* 누를 때 살짝 들어가는 효과 */
+        }
+        
         .notice-highlight { color: #ff5e5e; font-weight: 600; }
 
     </style>
@@ -344,7 +356,7 @@
         
         <div class="btn-sub-texts">
             <div class="btn-notice">※ 외부인 입장을 제한하기 위해 카페 가입시 <span class="notice-highlight">인증</span>이 필요합니다.</div>
-            <a href="guide.html" class="guide-link">👉 인증화면 캡쳐방법</a>
+            <a href="guide.html" class="guide-link">👉 인증화면 캡쳐방법 안내</a>
         </div>
         
         <!-- 인스타그램 -->
