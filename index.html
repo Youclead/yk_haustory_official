@@ -39,9 +39,10 @@
             color: #ffffff;
         }
 
-        /* 🔒 동영상 재생 중 스크롤 방지용 클래스 */
+        /* 🔒 모바일 브라우저의 강력한 스크롤 및 터치 방지 */
         body.no-scroll {
             overflow: hidden;
+            touch-action: none;
         }
 
         /* 🌌 애니메이션 오로라 배경 요소 */
@@ -84,13 +85,14 @@
             padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom) 24px;
         }
         
-        /* --- 🎬 인트로 동영상 (기기 무관 브라우저 100% 꽉 차게) --- */
+        /* --- 🎬 인트로 동영상 --- */
         #intro-video-container {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100vw; height: 100vh;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            height: 100dvh; /* 모바일 동적 뷰포트 지원 (주소창 튀는 현상 방지) */
             background-color: #000;
-            z-index: 9999;
+            z-index: 99999;
             display: flex; justify-content: center; align-items: center;
             transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -123,12 +125,19 @@
         #mute-btn { left: 24px; }
         #skip-btn { right: 24px; }
 
-        /* --- ✨ 공통 등장 애니메이션 --- */
+        /* --- ✨ 수정된 애니메이션 로직 (동영상 재생중엔 완벽히 투명화) --- */
         .fade-up {
-            opacity: 0;
+            opacity: 0; /* 기본 상태: 버튼 및 컨텐츠 아예 안보임 */
             transform: translateY(20px);
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none; /* 클릭 방지 */
         }
+        
+        /* 자바스크립트로 .start-animation 클래스가 추가되면 그때 나타남 */
+        .start-animation .fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: auto;
+        }
+        
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.25s; }
         .delay-3 { animation-delay: 0.4s; }
@@ -174,7 +183,7 @@
         }
         .subtitle .highlight { color: #FEE500; font-weight: 600; }
 
-        /* --- 카드형 컨텐츠 박스 (글래스모피즘) --- */
+        /* --- 카드형 컨텐츠 박스 --- */
         .content-box {
             background: var(--glass-bg);
             border-radius: 24px;
@@ -236,7 +245,6 @@
         }
         .btn:active { transform: scale(0.96); }
         
-        /* 버튼 공통 빛반사 효과 (Shine) */
         .btn::after {
             content: ''; position: absolute; top: 0; left: -100%;
             width: 50%; height: 100%;
@@ -273,7 +281,7 @@
             font-size: 13px; color: rgba(255, 255, 255, 0.6); word-break: keep-all; text-align: right;
         }
         
-        /* ✨ 수정된 가이드 링크 스타일 */
+        /* 가이드 링크 스타일 */
         .guide-link {
             font-size: 13px; 
             color: #74b9ff; 
@@ -299,20 +307,18 @@
             .title { font-size: 42px; }
             .subtitle { font-size: 18px; }
 
-            /* 안내 박스를 세로형에서 가로형(3열)으로 배치 */
             .feature-list { flex-direction: row; gap: 20px; }
             .feature-item { flex: 1; flex-direction: column; align-items: center; text-align: center; }
             .feature-icon-wrapper { margin-bottom: 8px; width: 48px; height: 48px; font-size: 22px; }
             .feature-text .li-title { font-size: 16px; margin-bottom: 10px; }
             
-            /* 버튼 그룹을 2열 그리드(Grid)로 정렬 */
             .btn-group { 
                 display: grid;
-                grid-template-columns: repeat(2, 1fr); /* 2열 배치 */
+                grid-template-columns: repeat(2, 1fr); 
                 gap: 30px 24px;
             }
             .btn-sub-texts {
-                align-items: center; /* PC에서는 텍스트 가운데 정렬 */
+                align-items: center; 
                 margin-right: 0;
             }
             .btn-notice { text-align: center; }
@@ -322,7 +328,7 @@
 </head>
 <body>
 
-<!-- 🌌 오로라 배경 (이미지 로딩 전/후 은은한 효과 제공) -->
+<!-- 🌌 오로라 배경 -->
 <div class="ambient-bg"></div>
 
 <!-- 🎬 인트로 동영상 영역 -->
@@ -334,8 +340,8 @@
     <button id="skip-btn" class="video-control-btn">건너뛰기 ➔</button>
 </div>
 
-<!-- 메인 페이지 영역 -->
-<div class="main-container">
+<!-- 메인 페이지 영역 (id="main-ui" 부여됨) -->
+<div class="main-container" id="main-ui">
     <!-- 헤더 영역 -->
     <div class="header fade-up delay-1">
         <div class="badge">입주예정자 공식 소통 창구</div>
@@ -426,22 +432,30 @@
         const video = document.getElementById('intro-video');
         const skipBtn = document.getElementById('skip-btn');
         const muteBtn = document.getElementById('mute-btn');
+        const mainUI = document.getElementById('main-ui');
 
-        // 세션 체크
+        // 세션 체크 (이미 영상을 본 유저 처리)
         if (sessionStorage.getItem('introSeen') === 'true') {
             videoContainer.style.display = 'none';
+            mainUI.classList.add('start-animation'); // 대기 없이 바로 UI 등장
             return; 
         }
 
-        // 🔒 동영상이 보일 때 스크롤 방지 클래스 추가
+        // 🔒 동영상이 보일 때 스크롤 완벽 차단
         document.body.classList.add('no-scroll');
 
+        // 동영상 종료 및 건너뛰기 처리 함수
         function hideVideo() {
-            // 🔓 동영상이 사라질 때 스크롤 방지 해제 및 최상단 이동
+            // 🔓 동영상이 사라질 때 스크롤 해제 및 최상단 이동
             document.body.classList.remove('no-scroll');
             window.scrollTo(0, 0);
 
+            // 동영상이 사라지기 시작함
             videoContainer.style.opacity = '0';
+            
+            // ✨ 동영상이 끝나는 시점에 메인 UI의 애니메이션을 시작 (버튼 보임 현상 완벽 해결)
+            mainUI.classList.add('start-animation');
+
             setTimeout(() => {
                 videoContainer.style.display = 'none';
                 video.pause();
@@ -463,7 +477,7 @@
             }
         });
 
-        // 이미 봤던 적이 없을 때만 자동 재생 시도
+        // 자동 재생 시도
         video.play().catch(error => {
             // 자동 재생이 완전히 막힌 경우 즉시 인트로 숨김
             hideVideo();
