@@ -335,7 +335,8 @@
     <div class="video-wrapper">
         <video id="intro-video" src="1.mp4" muted playsinline preload="auto"></video>
     </div>
-    <button id="mute-btn" class="video-control-btn">🔊 소리 켜기</button>
+    <!-- 🔇 초기 상태를 음소거 아이콘으로 수정 완료 -->
+    <button id="mute-btn" class="video-control-btn">🔇 소리 켜기</button>
     <button id="skip-btn" class="video-control-btn">건너뛰기 ➔</button>
 </div>
 
@@ -450,7 +451,7 @@
             document.body.classList.remove('no-scroll');
             window.scrollTo(0, 0);
 
-            // ✨ 숨겨놨던 메인 UI를 브라우저에 렌더링 (버그 원천 해결 구간)
+            // ✨ 숨겨놨던 메인 UI를 브라우저에 렌더링
             mainUI.style.display = 'flex';
             
             // 약간의 지연(Frame)을 주어 display:flex 변경이 브라우저에 적용된 후 애니메이션이 부드럽게 타도록 처리
@@ -474,11 +475,11 @@
         muteBtn.addEventListener('click', function() {
             if (video.muted) {
                 video.muted = false;
-                muteBtn.innerHTML = '🔇 소리 끄기';
+                muteBtn.innerHTML = '🔊 소리 끄기'; // ✨ 소리가 날 때는 🔊 아이콘
                 video.play().catch(err => console.log(err));
             } else {
                 video.muted = true;
-                muteBtn.innerHTML = '🔊 소리 켜기';
+                muteBtn.innerHTML = '🔇 소리 켜기'; // ✨ 소리가 안 날 때는 🔇 아이콘
             }
         });
 
