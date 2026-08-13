@@ -32,6 +32,11 @@
             color: #ffffff;
         }
 
+        /* 🔒 동영상 재생 중 스크롤 방지용 클래스 */
+        body.no-scroll {
+            overflow: hidden;
+        }
+
         /* 🌌 애니메이션 오로라 배경 요소 */
         .ambient-bg {
             position: fixed;
@@ -382,7 +387,14 @@
             return; 
         }
 
+        // 🔒 동영상이 보일 때 스크롤 방지 클래스 추가
+        document.body.classList.add('no-scroll');
+
         function hideVideo() {
+            // 🔓 동영상이 사라질 때 스크롤 방지 해제 및 최상단 이동
+            document.body.classList.remove('no-scroll');
+            window.scrollTo(0, 0);
+
             videoContainer.style.opacity = '0';
             setTimeout(() => {
                 videoContainer.style.display = 'none';
